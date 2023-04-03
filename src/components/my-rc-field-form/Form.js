@@ -1,5 +1,21 @@
-
-
-export default function Form({children}){
-    return <form>{children}</form>
+import FieldContext from "./FieldContext";
+import useForm from "./useForm";
+export default function Form({ children, form, onFinish, onFinishFailed }) {
+  const [formInstance] = useForm(form);
+  form.setCallbacks({
+    onFinish,
+    onFinishFailed,
+  });
+  console.log(children);
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        //禁止调默认更新
+        form.submit();
+      }}
+    >
+      <FieldContext.Provider value={formInstance}>{children}</FieldContext.Provider>
+    </form>
+  );
 }
